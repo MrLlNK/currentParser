@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "currentParserClient", "currentParserClient\currentParserClient.csproj", "{D18FCB83-A06B-4529-8DB3-3CFD1D1A0024}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "currentParserServer", "currentParserServer\currentParserServer.csproj", "{EEF92406-49C6-4598-8EB1-21C4C958B9F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D18FCB83-A06B-4529-8DB3-3CFD1D1A0024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D18FCB83-A06B-4529-8DB3-3CFD1D1A0024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D18FCB83-A06B-4529-8DB3-3CFD1D1A0024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF92406-49C6-4598-8EB1-21C4C958B9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF92406-49C6-4598-8EB1-21C4C958B9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF92406-49C6-4598-8EB1-21C4C958B9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF92406-49C6-4598-8EB1-21C4C958B9F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
