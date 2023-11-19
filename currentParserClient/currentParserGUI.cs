@@ -1,8 +1,8 @@
 namespace currentParserClient
 {
-    public partial class Form1 : Form
+    public partial class currentParserGUI : Form
     {
-        public Form1()
+        public currentParserGUI()
         {
             InitializeComponent();
         }

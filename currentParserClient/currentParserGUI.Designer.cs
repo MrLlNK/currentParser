@@ -1,6 +1,6 @@
 ﻿namespace currentParserClient
 {
-    partial class Form1
+    partial class currentParserGUI
     {
         /// <summary>
         ///  Required designer variable.
