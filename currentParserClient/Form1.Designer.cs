@@ -28,12 +28,104 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            currentTextBox = new TextBox();
+            buttonParse = new Button();
+            dollarLabel = new Label();
+            textBox1 = new TextBox();
+            textBox2 = new TextBox();
+            currentTextLabel = new Label();
+            labelInformation = new Label();
+            SuspendLayout();
+            // 
+            // currentTextBox
+            // 
+            currentTextBox.Location = new Point(27, 27);
+            currentTextBox.Name = "currentTextBox";
+            currentTextBox.RightToLeft = RightToLeft.Yes;
+            currentTextBox.Size = new Size(214, 26);
+            currentTextBox.TabIndex = 0;
+            currentTextBox.Text = "Please write the current";
+            // 
+            // buttonParse
+            // 
+            buttonParse.Location = new Point(310, 25);
+            buttonParse.Name = "buttonParse";
+            buttonParse.Size = new Size(146, 28);
+            buttonParse.TabIndex = 1;
+            buttonParse.Text = "Translate to Text";
+            buttonParse.UseVisualStyleBackColor = true;
+            // 
+            // dollarLabel
+            // 
+            dollarLabel.AutoSize = true;
+            dollarLabel.Location = new Point(245, 32);
+            dollarLabel.Name = "dollarLabel";
+            dollarLabel.Size = new Size(17, 20);
+            dollarLabel.TabIndex = 2;
+            dollarLabel.Text = "$";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(27, 94);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ReadOnly = true;
+            textBox1.Size = new Size(429, 58);
+            textBox1.TabIndex = 3;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(27, 187);
+            textBox2.Multiline = true;
+            textBox2.Name = "textBox2";
+            textBox2.ReadOnly = true;
+            textBox2.Size = new Size(429, 78);
+            textBox2.TabIndex = 4;
+            // 
+            // currentTextLabel
+            // 
+            currentTextLabel.AutoSize = true;
+            currentTextLabel.Location = new Point(27, 71);
+            currentTextLabel.Name = "currentTextLabel";
+            currentTextLabel.Size = new Size(107, 20);
+            currentTextLabel.TabIndex = 5;
+            currentTextLabel.Text = "Current in Text:";
+            // 
+            // labelInformation
+            // 
+            labelInformation.AutoSize = true;
+            labelInformation.Location = new Point(27, 164);
+            labelInformation.Name = "labelInformation";
+            labelInformation.Size = new Size(90, 20);
+            labelInformation.TabIndex = 6;
+            labelInformation.Text = "Information:";
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(8F, 19F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(493, 291);
+            Controls.Add(labelInformation);
+            Controls.Add(currentTextLabel);
+            Controls.Add(textBox2);
+            Controls.Add(textBox1);
+            Controls.Add(dollarLabel);
+            Controls.Add(buttonParse);
+            Controls.Add(currentTextBox);
+            Name = "Form1";
+            Text = "Form1";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private TextBox currentTextBox;
+        private Button buttonParse;
+        private Label dollarLabel;
+        private TextBox textBox1;
+        private TextBox textBox2;
+        private Label currentTextLabel;
+        private Label labelInformation;
     }
 }
