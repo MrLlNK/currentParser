@@ -27,11 +27,11 @@ namespace currentParserServer
     }
 
 
-    class currentParser
+    class CurrentParser
     {
         Constant CONSTANT = new Constant();
 
-
+        
 
         static Boolean outOfRange(double value)
         {

@@ -7,37 +7,81 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+using static currentParserServer.CurrentParser;
+
 namespace currentParserServer
 {
     public class Server
     {
         public const int port = 10000;
-        public IPAddress ipAddress = IPAddress.Any;
         public const int sleepTimer = 200;
 
-        public Server()
+        public void startServer()
         {
+            IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = ipHost.AddressList[0];
+            IPEndPoint endPoint = new IPEndPoint(ipAddress, port);
 
-            TcpListener tcpListener = new TcpListener(ipAddress, port);
-            Debug.WriteLine("Listen on port: " + port.ToString());
+            Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                tcpListener.Start();
-                while (!tcpListener.Pending())
+
+                socket.Bind(endPoint);
+                socket.Listen(10);
+                while (true)
                 {
-                    Thread.Sleep(sleepTimer);
+                    Console.WriteLine("Waiting connection ...");
+                    Socket clientSocket = socket.Accept();
+
+                    byte[] buffer = new byte[1024];
+                    string data = null;
+
+                    while (true)
+                    {
+
+                        int numByte = clientSocket.Receive(buffer);
+
+                        data += Encoding.ASCII.GetString(buffer, 0, numByte);
+                        
+                        Thread.Sleep(sleepTimer);
+                        int posOfIndex = data.IndexOf("<CURRENT>");
+                        if (posOfIndex >= 0)
+                        {
+                            data = data.Remove(posOfIndex);
+                            break;
+                        }
+                    }
+
+                    Console.WriteLine("Text received -> {0} ", data);
+                    CurrentParser currentParser = new CurrentParser();
+                    try
+                    {
+                        // Parse into double   
+                        double currentDouble = double.Parse(data);
+
+                        String currentInText = currentParser.valueToWord(currentDouble);
+                        Console.WriteLine(currentInText);
+                        byte[] message = Encoding.ASCII.GetBytes(currentInText);
+
+                        clientSocket.Send(message);
+
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Close();
+                    }
+                    catch (FormatException err)
+                    {
+                        Console.WriteLine("Error: " + err.Message);
+
+                    }
+
                 }
-
-                Socket socket = tcpListener.AcceptSocket();
-
             }
             catch (Exception err)
             {
-                throw new Exception("Fehler beim Verbindungserkennung", err);
+                throw new Exception(err.ToString());
             }
+
         }
-
-
 
     }
 }

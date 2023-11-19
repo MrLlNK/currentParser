@@ -1,13 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
+﻿using System.Diagnostics.Metrics;
+using static currentParserServer.Server;
 
 namespace currentParserServer
 {
+    internal static class Program
+    {
+        static void Main()
+        {
+            Server server = new Server();
+            server.startServer();
+        }
 
- 
-
-
+    }
 }
