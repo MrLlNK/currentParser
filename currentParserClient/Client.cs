@@ -18,7 +18,7 @@ namespace currentParserClient
 
             try
             {
-                IPHostEntry ipHost = Dns.GetHostByName(Addresse);
+                IPHostEntry ipHost = Dns.GetHostByName(Dns.GetHostName());
                 IPAddress ipAdress = ipHost.AddressList[0];
                 IPEndPoint endPoint = new IPEndPoint(ipAdress, port);
 
@@ -48,19 +48,31 @@ namespace currentParserClient
             }
         }
 
-        public void sendMessage(String messageText)
+        public void deleteSocket()
         {
-            byte[] messageSent = Encoding.ASCII.GetBytes(messageText);
-            int byteSent = socket.Send(messageSent);
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close();
+        }
+
+        public void sendMessage(String messageText, String ID)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes(messageText+"<"+ID+">");
+            int byteSent = this.socket.Send(messageSent);
         }
 
         public String receiveMessage()
         {
-            byte[] messageReceived = new byte[1024];
-            int byteRecv = socket.Receive(messageReceived);
+            try
+            {
+                byte[] messageReceived = new byte[1024];
+                int byteRecv = this.socket.Receive(messageReceived);
 
-            return Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+                return Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+            }
+            catch(Exception err)
+            {
+                throw new Exception(err.ToString());
+            }
         }
-
     }
 }

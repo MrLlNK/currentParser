@@ -4,27 +4,19 @@ namespace currentParserClient
 {
     public partial class currentParserGUI : Form
     {
-        Client client;
-
         public currentParserGUI()
         {
             InitializeComponent();
-            try
-            {
-                client = new Client();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-
         }
 
         private void buttonParse_Click(object sender, EventArgs e)
         {
-            client.sendMessage(currentTextBox.Text);
+            Client client = new Client();
+            client.sendMessage(currentTextBox.Text, "CURRENT");
 
             currentStringTextbox.Text = client.receiveMessage();
+
+            client.deleteSocket();
         }
     }
 }
