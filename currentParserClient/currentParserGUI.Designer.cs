@@ -31,7 +31,7 @@
             currentTextBox = new TextBox();
             buttonParse = new Button();
             dollarLabel = new Label();
-            textBox1 = new TextBox();
+            currentStringTextbox = new TextBox();
             textBox2 = new TextBox();
             currentTextLabel = new Label();
             labelInformation = new Label();
@@ -54,6 +54,7 @@
             buttonParse.TabIndex = 1;
             buttonParse.Text = "Translate to Text";
             buttonParse.UseVisualStyleBackColor = true;
+            buttonParse.Click += buttonParse_Click;
             // 
             // dollarLabel
             // 
@@ -64,14 +65,14 @@
             dollarLabel.TabIndex = 2;
             dollarLabel.Text = "$";
             // 
-            // textBox1
+            // currentStringTextbox
             // 
-            textBox1.Location = new Point(27, 94);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.Size = new Size(429, 58);
-            textBox1.TabIndex = 3;
+            currentStringTextbox.Location = new Point(27, 94);
+            currentStringTextbox.Multiline = true;
+            currentStringTextbox.Name = "currentStringTextbox";
+            currentStringTextbox.ReadOnly = true;
+            currentStringTextbox.Size = new Size(429, 58);
+            currentStringTextbox.TabIndex = 3;
             // 
             // textBox2
             // 
@@ -100,7 +101,7 @@
             labelInformation.TabIndex = 6;
             labelInformation.Text = "Information:";
             // 
-            // Form1
+            // currentParserGUI
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -108,11 +109,11 @@
             Controls.Add(labelInformation);
             Controls.Add(currentTextLabel);
             Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(currentStringTextbox);
             Controls.Add(dollarLabel);
             Controls.Add(buttonParse);
             Controls.Add(currentTextBox);
-            Name = "Form1";
+            Name = "currentParserGUI";
             Text = "Form1";
             ResumeLayout(false);
             PerformLayout();
@@ -123,7 +124,7 @@
         private TextBox currentTextBox;
         private Button buttonParse;
         private Label dollarLabel;
-        private TextBox textBox1;
+        private TextBox currentStringTextbox;
         private TextBox textBox2;
         private Label currentTextLabel;
         private Label labelInformation;
