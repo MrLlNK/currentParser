@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace currentParserServer
 {
     class Constant
     {   
-        public String[] stringPotencyList = { "million", "thousand", "" };
-        private String[] stringHundrets = { "onehundred", "twohundred", "threehundred", "fourhundred", "fivehundred", "sixhundred", "sevenhundred", "eighthundred", "ninehundred" };
-        private String[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
-        private String[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
-        public List<String[]> stringFactorCurrents = new List<String[]>();
+        public string[] stringPotencyList = { "million", "thousand", "" };
+        private string[] stringHundrets = { "onehundred", "twohundred", "threehundred", "fourhundred", "fivehundred", "sixhundred", "sevenhundred", "eighthundred", "ninehundred" };
+        private string[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
+        private string[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
+        public List<string[]> stringFactorCurrents = new List<string[]>();
         public int[] potencyList = { 1_000_000, 1_000, 1 };
         public int[] factorCurrents = { 100, 10, 1 };
 
@@ -31,34 +27,50 @@ namespace currentParserServer
     {
         Constant CONSTANT = new Constant();
 
-        
-
-        static Boolean outOfRange(double value)
+        static bool falseSyntax(string value)
         {
-            if (value < 0)
+            // is a letter inside
+            if (!decimal.TryParse(value, out _))
             {
                 return true;
             }
-            if (value > 999_999_999)
+            // check two digits after decimal separator and german syntax 
+            if (!Regex.IsMatch(value, @"^[0-9.]{0,9}\,[0-9]{2}$"))
             {
                 return true;
             }
             return false;
         }
+        
 
-
-        public String valueToWord(double value)
+        static decimal string2Decimal(String value)
         {
+            return Convert.ToDecimal(value, new CultureInfo("de-DE"));
+        }
 
-            if (value == 0)
+        public string calcStringValueFromValue(string value)
+        {
+            
+            if (falseSyntax(value)){
+                return "Value have a false syntax. The Inputvalue can only be number. Seperator must be a comma.";
+            }
+
+            decimal decimalValue = string2Decimal(value);
+  
+            if (decimalValue.Equals(0.00m))
             {
                 return "zero dollars";
             }
-            if (value == 1)
+            if (decimalValue.Equals(1.00m))
             {
                 return "one dollar";
             }
-            String valueString = "";
+            return decimalValue2Text(decimalValue);
+        }
+
+        public string decimalValue2Text(decimal value)
+        {
+            string valueString = "";
 
             int i = 0;
             foreach (int potency in CONSTANT.potencyList)
@@ -67,7 +79,6 @@ namespace currentParserServer
 
                 if (factoredValue > 0)
                 {
-
                     int j = 0;
                     foreach (int factorCurrent in CONSTANT.factorCurrents)
                     {
@@ -96,9 +107,44 @@ namespace currentParserServer
                 }
                 i++;
             }
-            return valueString + "dollars";
+            valueString = valueString + "dollars";
+
+            int centValue = (int)(value * 100);
+
+            if (centValue > 0)
+            {
+                valueString = valueString + " and ";
+                int j = 0;
+                foreach (int factorCurrent in CONSTANT.factorCurrents)
+                {
+
+                    int factoredCurrent = (int)centValue / factorCurrent;
+                    if (factorCurrent == 10 && centValue <= 19)
+                    {
+                        j++;
+                        continue;
+                    }
+                    if (factoredCurrent > 0)
+                    {
+                        valueString += CONSTANT.stringFactorCurrents[j][factoredCurrent - 1];
+                        centValue -= factoredCurrent * factorCurrent;
+                        if (centValue == 0)
+                        {
+                            break;
+                        }
+                        valueString += "-";
+                    }
+
+                    j++;
+                }
+                valueString += " Cent";
+            }
+            i++;
+
+            return valueString;
+
         }
 
-
+       
     }
 }
