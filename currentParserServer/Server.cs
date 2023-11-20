@@ -56,11 +56,8 @@ namespace currentParserServer
                     CurrentParser currentParser = new CurrentParser();
                     try
                     {
-                        // Parse into double   
-                        double currentDouble = double.Parse(data);
-
-                        String currentInText = currentParser.valueToWord(currentDouble);
-                        Console.WriteLine(currentInText);
+                        string currentInText = currentParser.calcStringValueFromValue(data);
+                        Console.WriteLine("Write --> " + currentInText);
                         byte[] message = Encoding.ASCII.GetBytes(currentInText);
 
                         clientSocket.Send(message);
