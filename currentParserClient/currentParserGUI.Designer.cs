@@ -28,23 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            currentTextBox = new TextBox();
             buttonParse = new Button();
             dollarLabel = new Label();
             currentStringTextbox = new TextBox();
             textBox2 = new TextBox();
             currentTextLabel = new Label();
             labelInformation = new Label();
+            currentTextbox = new TextBox();
             SuspendLayout();
-            // 
-            // currentTextBox
-            // 
-            currentTextBox.Location = new Point(27, 27);
-            currentTextBox.Name = "currentTextBox";
-            currentTextBox.RightToLeft = RightToLeft.Yes;
-            currentTextBox.Size = new Size(214, 26);
-            currentTextBox.TabIndex = 0;
-            currentTextBox.Text = "Please write the current";
             // 
             // buttonParse
             // 
@@ -67,7 +58,7 @@
             // 
             // currentStringTextbox
             // 
-            currentStringTextbox.Location = new Point(27, 94);
+            currentStringTextbox.Location = new Point(27, 88);
             currentStringTextbox.Multiline = true;
             currentStringTextbox.Name = "currentStringTextbox";
             currentStringTextbox.ReadOnly = true;
@@ -101,18 +92,26 @@
             labelInformation.TabIndex = 6;
             labelInformation.Text = "Information:";
             // 
+            // currentTextbox
+            // 
+            currentTextbox.Location = new Point(27, 29);
+            currentTextbox.Name = "currentTextbox";
+            currentTextbox.Size = new Size(212, 26);
+            currentTextbox.TabIndex = 7;
+            currentTextbox.Text = "Please write the current";
+            // 
             // currentParserGUI
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(493, 291);
+            Controls.Add(currentTextbox);
             Controls.Add(labelInformation);
             Controls.Add(currentTextLabel);
             Controls.Add(textBox2);
             Controls.Add(currentStringTextbox);
             Controls.Add(dollarLabel);
             Controls.Add(buttonParse);
-            Controls.Add(currentTextBox);
             Name = "currentParserGUI";
             Text = "Form1";
             ResumeLayout(false);
@@ -120,13 +119,12 @@
         }
 
         #endregion
-
-        private TextBox currentTextBox;
         private Button buttonParse;
         private Label dollarLabel;
         private TextBox currentStringTextbox;
         private TextBox textBox2;
         private Label currentTextLabel;
         private Label labelInformation;
+        private TextBox currentTextbox;
     }
 }
