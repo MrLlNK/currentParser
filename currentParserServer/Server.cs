@@ -48,28 +48,21 @@ namespace currentParserServer
                         if (posOfIndex >= 0)
                         {
                             data = data.Remove(posOfIndex);
+                            Console.WriteLine("Text received -> {0} ", data);
+                            CurrentParser currentParser = new CurrentParser();
+
+                            string currentInText = currentParser.calcStringValueFromValue(data);
+                            Console.WriteLine("Write --> " + currentInText);
+                            byte[] message = Encoding.ASCII.GetBytes(currentInText);
+
+                            clientSocket.Send(message);
+
                             break;
                         }
                     }
 
-                    Console.WriteLine("Text received -> {0} ", data);
-                    CurrentParser currentParser = new CurrentParser();
-                    try
-                    {
-                        string currentInText = currentParser.calcStringValueFromValue(data);
-                        Console.WriteLine("Write --> " + currentInText);
-                        byte[] message = Encoding.ASCII.GetBytes(currentInText);
-
-                        clientSocket.Send(message);
-
-                        clientSocket.Shutdown(SocketShutdown.Both);
-                        clientSocket.Close();
-                    }
-                    catch (FormatException err)
-                    {
-                        Console.WriteLine("Error: " + err.Message);
-
-                    }
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Close();
 
                 }
             }
