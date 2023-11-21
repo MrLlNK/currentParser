@@ -5,7 +5,7 @@ namespace currentParserServer
 {
     class Constant
     {   
-        public string[] stringPotencyList = { " million", " thousand", "" };
+        public string[] stringPotencyList = { " million", " thousand", " dollars" };
         public string[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
         public string[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
         public int[] potencyList = { 1_000_000, 1_000, 1 };
@@ -56,13 +56,13 @@ namespace currentParserServer
         {
             
             if (falseSyntax(value)){
-                return "Value have a false syntax. The Inputvalue can only be number. Seperator must be a comma.";
+                return "SyntaxError: Value has a false syntax!";
             }
 
             decimal decimalValue = string2Decimal(value);
             if (isOutOfRange(decimalValue))
             {
-                return "Current is out of Range!";
+                return "Error: Out of Range!";
             }
             if (decimalValue < 0.99m && decimalValue >= 0.00m)
             {
@@ -122,7 +122,7 @@ namespace currentParserServer
                 }
                 i++;
             }
-            return valueString + "dollars";
+            return valueString;
         }
 
         public string decimalValue2Cent(decimal value) {
@@ -132,7 +132,7 @@ namespace currentParserServer
 
             if (centValue > 0)
             {
-                valueString = valueString + " and ";
+                valueString = valueString + "and ";
 
                 if (centValue >= 19)
                 {
