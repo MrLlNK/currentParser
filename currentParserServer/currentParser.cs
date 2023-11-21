@@ -102,41 +102,43 @@ namespace currentParserServer
                 
                 if (factoredValue > 0)
                 {
-                int numberHundrets = (int)factoredValue / 100;
-                if (numberHundrets > 0)
-                {
-                    valueString += CONSTANT.stringOnes[numberHundrets - 1] + "hundred";
-                    value -= 100 * numberHundrets * potency;
-                    factoredValue -= 100 * numberHundrets;
-                    if (factoredValue > 0) { valueString += " "; }
-                }
-                   
-                if (factoredValue >= 19)
-                {
-                    int numberTens = (int)factoredValue / 10;
-                    if (numberTens > 0)
+                    int numberHundrets = (int)factoredValue / 100;
+                    if (numberHundrets > 0)
                     {
-                        valueString += CONSTANT.stringTens[numberTens - 1];
-                        value -= 10 * numberTens * potency;
-                        factoredValue -= 10 * numberTens;
-                        if (factoredValue > 0)
+                        valueString += CONSTANT.stringOnes[numberHundrets - 1] + "hundred";
+                        value -= 100 * numberHundrets * potency;
+                        factoredValue -= 100 * numberHundrets;
+                        if (factoredValue > 0) { valueString += " "; }
+                    }
+                   
+                    if (factoredValue >= 19)
+                    {
+                        int numberTens = (int)factoredValue / 10;
+                        if (numberTens > 0)
                         {
-                            valueString += "-";
+                            valueString += CONSTANT.stringTens[numberTens - 1];
+                            value -= 10 * numberTens * potency;
+                            factoredValue -= 10 * numberTens;
+                            if (factoredValue > 0)
+                            {
+                                valueString += "-";
+                            }
                         }
                     }
-                }
 
-                int numberOnes = (int)factoredValue;
-                if (numberOnes > 0)
-                {
-                    valueString += CONSTANT.stringOnes[numberOnes - 1];
-                    value -= numberOnes * potency;
-                    factoredValue -= numberOnes;
-                }
+                    int numberOnes = (int)factoredValue;
+                    if (numberOnes > 0)
+                    {
+                        valueString += CONSTANT.stringOnes[numberOnes - 1];
+                        value -= numberOnes * potency;
+                        factoredValue -= numberOnes;
+                    }
 
-                valueString += CONSTANT.stringPotencyList[i];
-                if (value != 0) { 
-                        return valueString + " "; }
+                    
+                    if (value < 1) { 
+                        return valueString + " "; 
+                    }
+                    valueString += CONSTANT.stringPotencyList[i] + " ";
                 }
                 i++;
             }
