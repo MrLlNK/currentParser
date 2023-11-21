@@ -5,27 +5,31 @@ namespace currentParserServer
 {
     class Constant
     {   
-        public string[] stringPotencyList = { "million", "thousand", "" };
-        private string[] stringHundrets = { "onehundred", "twohundred", "threehundred", "fourhundred", "fivehundred", "sixhundred", "sevenhundred", "eighthundred", "ninehundred" };
-        private string[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
-        private string[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
-        public List<string[]> stringFactorCurrents = new List<string[]>();
+        public string[] stringPotencyList = { " million", " thousand", "" };
+        public string[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
+        public string[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
         public int[] potencyList = { 1_000_000, 1_000, 1 };
-        public int[] factorCurrents = { 100, 10, 1 };
-
-        public Constant()
-        {
-            stringFactorCurrents.Add(stringHundrets);
-            stringFactorCurrents.Add(stringTens);
-            stringFactorCurrents.Add(stringOnes);
-        }
-
     }
 
 
     class CurrentParser
     {
         Constant CONSTANT = new Constant();
+
+        static bool isOutOfRange(decimal value)
+        {
+            if (value < 0)
+            {
+                return true;
+            }
+            if (value > 999999999.99m)
+            {
+                return true;
+            }
+            {
+                return false;
+            }
+        }
 
         static bool falseSyntax(string value)
         {
@@ -35,7 +39,7 @@ namespace currentParserServer
                 return true;
             }
             // check two digits after decimal separator and german syntax 
-            if (!Regex.IsMatch(value, @"^[0-9.]{0,9}\,[0-9]{2}$"))
+            if (!Regex.IsMatch(value, @"^[\d.]{0,}\,[\d]{0,2}$|[\d.]{0,}"))
             {
                 return true;
             }
@@ -56,19 +60,22 @@ namespace currentParserServer
             }
 
             decimal decimalValue = string2Decimal(value);
-  
-            if (decimalValue.Equals(0.00m))
+            if (isOutOfRange(decimalValue))
             {
-                return "zero dollars";
+                return "Current is out of Range!";
             }
-            if (decimalValue.Equals(1.00m))
+            if (decimalValue < 0.99m && decimalValue >= 0.00m)
             {
-                return "one dollar";
+                return "zero dollars" + decimalValue2Cent(decimalValue);
+            }
+            if (decimalValue < 1.99m && decimalValue >= 1.00m)
+            {
+                return "one dollar" + decimalValue2Cent(decimalValue);
             }
             return decimalValue2Text(decimalValue);
         }
 
-        public string decimalValue2Text(decimal value)
+        public string decimalValue2Dollar(decimal value)
         {
             string valueString = "";
 
@@ -79,69 +86,85 @@ namespace currentParserServer
 
                 if (factoredValue > 0)
                 {
-                    int j = 0;
-                    foreach (int factorCurrent in CONSTANT.factorCurrents)
+                    int numberHundrets = (int)factoredValue / 100;
+                    if (numberHundrets > 0)
                     {
-
-                        int factoredCurrent = (int)factoredValue / factorCurrent;
-                        if (factorCurrent == 10 && factoredValue <= 19)
-                        {
-                            j++;
-                            continue;
-                        }
-                        if (factoredCurrent > 0)
-                        {
-                            valueString += CONSTANT.stringFactorCurrents[j][factoredCurrent - 1];
-                            value -= factoredCurrent * factorCurrent * potency;
-                            factoredValue -= factoredCurrent * factorCurrent;
-                            if (factoredValue == 0)
-                            {
-                                break;
-                            }
-                            valueString += "-";
-                        }
-
-                        j++;
+                        valueString += CONSTANT.stringOnes[numberHundrets - 1] + "hundred";
+                        value -= 100 * numberHundrets * potency;
+                        factoredValue -= 100 * numberHundrets;
+                        if (factoredValue > 0) { valueString += " "; }
                     }
+                   
+                    if (factoredValue >= 19)
+                    {
+                        int numberTens = (int)factoredValue / 10;
+                        if (numberTens > 0)
+                        {
+                            valueString += CONSTANT.stringTens[numberTens - 1];
+                            value -= 10 * numberTens * potency;
+                            factoredValue -= 10 * numberTens;
+                            if (factoredValue > 0)
+                            {
+                                valueString += "-";
+                            }
+                        }
+                    }
+
+                    int numberOnes = (int)factoredValue;
+                    if (numberOnes > 0)
+                    {
+                        valueString += CONSTANT.stringOnes[numberOnes - 1];
+                        value -= numberOnes * potency;
+                        factoredValue -= numberOnes;
+                    }
+
                     valueString += CONSTANT.stringPotencyList[i] + " ";
                 }
                 i++;
             }
-            valueString = valueString + "dollars";
+            return valueString + "dollars";
+        }
 
-            int centValue = (int)(value * 100);
+        public string decimalValue2Cent(decimal value) {
+            string valueString = "";
+
+            int centValue = (int)(value%1 * 100);
 
             if (centValue > 0)
             {
                 valueString = valueString + " and ";
-                int j = 0;
-                foreach (int factorCurrent in CONSTANT.factorCurrents)
+
+                if (centValue >= 19)
                 {
-
-                    int factoredCurrent = (int)centValue / factorCurrent;
-                    if (factorCurrent == 10 && centValue <= 19)
+                    int numberTens = (int)centValue / 10;
+                    if (numberTens > 0)
                     {
-                        j++;
-                        continue;
-                    }
-                    if (factoredCurrent > 0)
-                    {
-                        valueString += CONSTANT.stringFactorCurrents[j][factoredCurrent - 1];
-                        centValue -= factoredCurrent * factorCurrent;
-                        if (centValue == 0)
+                        valueString += CONSTANT.stringTens[numberTens - 1];
+                        centValue -= 10 * numberTens;
+                        if (centValue > 0)
                         {
-                            break;
+                            valueString += "-";
                         }
-                        valueString += "-";
                     }
-
-                    j++;
                 }
-                valueString += " Cent";
-            }
-            i++;
 
+                int numberOnes = (int)centValue;
+                if (numberOnes > 0)
+                {
+                    valueString += CONSTANT.stringOnes[numberOnes - 1];
+                }
+                valueString += " cent";
+            }
             return valueString;
+
+        }
+        public string decimalValue2Text(decimal value)
+        {
+            string dollar = decimalValue2Dollar(value);
+
+            string cent = decimalValue2Cent(value);
+            
+            return dollar + cent;
 
         }
 
