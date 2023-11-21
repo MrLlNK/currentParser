@@ -8,9 +8,9 @@ namespace currentParserServer
     {
         public NumberFormatInfo numberFormatInfo = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalSeparator = "," };
         public string[] stringPotencyList = { " million", " thousand", " dollars" };
-        public string[] stringTens = { "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty" };
-        public string[] stringOnes = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen" };
-        public int[] potencyList = { 1_000_000, 1_000, 1 };
+        public string[] stringTens = ["ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty"];
+        public string[] stringOnes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen"];
+        public int[] potencyList = [1_000_000, 1_000, 1];
     }
 
 
@@ -70,12 +70,22 @@ namespace currentParserServer
 
             if (decimalValue < 0.99m && decimalValue >= 0.00m)
             {
-                return "zero dollars" + decimalValue2Cent(decimalValue);
+                string cent = decimalValue2Cent(decimalValue);
+                if (cent == "")
+                {
+                    return "zero dollars";
+                }
+                return "zero dollars " + cent;
             }
 
             if (decimalValue < 1.99m && decimalValue >= 1.00m)
             {
-                return "one dollar" + decimalValue2Cent(decimalValue);
+                string cent = decimalValue2Cent(decimalValue);
+                if (cent == "")
+                {
+                    return "one dollar";
+                }
+                return "one dollar " + cent;
             }
             return decimalValue2Text(decimalValue);
         }
@@ -124,25 +134,28 @@ namespace currentParserServer
                     factoredValue -= numberOnes;
                 }
 
-                valueString += CONSTANT.stringPotencyList[i] + " ";
+                valueString += CONSTANT.stringPotencyList[i];
+                if (value != 0) { 
+                        return valueString + " "; }
                 }
                 i++;
             }
-            return valueString;
+            return valueString + " ";
         }
 
         public string decimalValue2Cent(decimal value) {
             string valueString = "";
-
+            int numberTens = 0;
+            int numberOnes = 0;
             int centValue = (int)(value%1 * 100);
 
             if (centValue > 0)
             {
-                valueString = valueString + "and ";
+                valueString += "and ";
 
                 if (centValue >= 19)
                 {
-                    int numberTens = (int)centValue / 10;
+                    numberTens = (int)centValue / 10;
                     if (numberTens > 0)
                     {
                         valueString += CONSTANT.stringTens[numberTens - 1];
@@ -154,12 +167,16 @@ namespace currentParserServer
                     }
                 }
 
-                int numberOnes = (int)centValue;
+                numberOnes = (int)centValue;
                 if (numberOnes > 0)
                 {
                     valueString += CONSTANT.stringOnes[numberOnes - 1];
+                    if (numberOnes == 1 && numberTens == 0)
+                    {
+                        return valueString +" cent";
+                    }
                 }
-                valueString += " cent";
+                valueString += " cents";
             }
             return valueString;
 

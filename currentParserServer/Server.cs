@@ -61,6 +61,7 @@ namespace currentParserServer
                         }
                     }
 
+
                     clientSocket.Shutdown(SocketShutdown.Both);
                     clientSocket.Close();
 
