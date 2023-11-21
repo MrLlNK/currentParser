@@ -31,15 +31,13 @@
             buttonParse = new Button();
             dollarLabel = new Label();
             currentStringTextbox = new TextBox();
-            textBox2 = new TextBox();
             currentTextLabel = new Label();
-            labelInformation = new Label();
             currentTextbox = new TextBox();
             SuspendLayout();
             // 
             // buttonParse
             // 
-            buttonParse.Location = new Point(310, 25);
+            buttonParse.Location = new Point(288, 29);
             buttonParse.Name = "buttonParse";
             buttonParse.Size = new Size(146, 28);
             buttonParse.TabIndex = 1;
@@ -65,15 +63,6 @@
             currentStringTextbox.Size = new Size(429, 58);
             currentStringTextbox.TabIndex = 3;
             // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(27, 187);
-            textBox2.Multiline = true;
-            textBox2.Name = "textBox2";
-            textBox2.ReadOnly = true;
-            textBox2.Size = new Size(429, 78);
-            textBox2.TabIndex = 4;
-            // 
             // currentTextLabel
             // 
             currentTextLabel.AutoSize = true;
@@ -83,15 +72,6 @@
             currentTextLabel.TabIndex = 5;
             currentTextLabel.Text = "Current in Text:";
             // 
-            // labelInformation
-            // 
-            labelInformation.AutoSize = true;
-            labelInformation.Location = new Point(27, 164);
-            labelInformation.Name = "labelInformation";
-            labelInformation.Size = new Size(90, 20);
-            labelInformation.TabIndex = 6;
-            labelInformation.Text = "Information:";
-            // 
             // currentTextbox
             // 
             currentTextbox.Location = new Point(27, 29);
@@ -99,16 +79,15 @@
             currentTextbox.Size = new Size(212, 26);
             currentTextbox.TabIndex = 7;
             currentTextbox.Text = "Please write the current";
+            currentTextbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckEnterKeyPress);
             // 
             // currentParserGUI
             // 
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(493, 291);
+            ClientSize = new Size(493, 166);
             Controls.Add(currentTextbox);
-            Controls.Add(labelInformation);
             Controls.Add(currentTextLabel);
-            Controls.Add(textBox2);
             Controls.Add(currentStringTextbox);
             Controls.Add(dollarLabel);
             Controls.Add(buttonParse);
@@ -122,9 +101,7 @@
         private Button buttonParse;
         private Label dollarLabel;
         private TextBox currentStringTextbox;
-        private TextBox textBox2;
         private Label currentTextLabel;
-        private Label labelInformation;
         private TextBox currentTextbox;
     }
 }
