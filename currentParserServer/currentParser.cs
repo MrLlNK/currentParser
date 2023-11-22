@@ -7,7 +7,7 @@ namespace currentParserServer
     class Constant
     {
         public NumberFormatInfo numberFormatInfo = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalSeparator = "," };
-        public string[] stringPotencyList = { " million", " thousand", " dollars" };
+        public string[] stringPotencyList = { "million", "thousand", "dollars" };
         public string[] stringTens = ["ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty"];
         public string[] stringOnes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen"];
         public int[] potencyList = [1_000_000, 1_000, 1];
@@ -33,6 +33,15 @@ namespace currentParserServer
             }
         }
 
+        static string ConcatenateStrings(string stringStart, string stringEnd, string seperator)
+        {
+            stringStart = stringStart.TrimEnd();
+            stringStart = stringStart.TrimStart();
+            stringEnd = stringEnd.TrimStart();
+            stringEnd = stringEnd.TrimEnd();
+            return stringStart + seperator + stringEnd;
+        }
+
         public bool falseSyntax(string value)
         {
             try
@@ -54,6 +63,24 @@ namespace currentParserServer
             return Convert.ToDecimal(value, CONSTANT.numberFormatInfo);
         }
 
+        public string getSpezialCase(decimal value)
+        {
+            if (value < 0.99m && value >= 0.00m)
+            {
+                string dollar = "zero dollars";
+                string cent = convertCent2Text(value);
+                return ConcatenateStrings(dollar, cent, (cent == "") ? "" : " and ");
+            }
+
+            if (value <1.99m && value >= 1.00m)
+            {
+                string dollar = "one dollar";
+                string cent = convertCent2Text(value);
+                return ConcatenateStrings(dollar, cent, (cent == "") ? "" : " and ");
+            }
+            return "";
+        }
+
         public string calcStringValueFromValue(string value)
         {
             
@@ -68,129 +95,95 @@ namespace currentParserServer
                 return "Error: Out of Range!";
             }
 
-            if (decimalValue < 0.99m && decimalValue >= 0.00m)
+            string spezialValue = getSpezialCase(decimalValue);
+            if (spezialValue != "")
             {
-                string cent = decimalValue2Cent(decimalValue);
-                if (cent == "")
-                {
-                    return "zero dollars";
-                }
-                return "zero dollars " + cent;
+                return spezialValue;
             }
 
-            if (decimalValue < 1.99m && decimalValue >= 1.00m)
-            {
-                string cent = decimalValue2Cent(decimalValue);
-                if (cent == "")
-                {
-                    return "one dollar";
-                }
-                return "one dollar " + cent;
-            }
-            return decimalValue2Text(decimalValue);
+            return convertCurrent2Text(decimalValue);
         }
 
 
-        public string decimalValue2Dollar(decimal value)
-        {
+        public string convertDollar2Text(decimal value)
+        {          
             string valueString = "";
 
             int i = 0;
             foreach (int potency in CONSTANT.potencyList)
             {
                 int factoredValue = (int)value / potency;
-                
+                value -= factoredValue* potency;
                 if (factoredValue > 0)
                 {
                     int numberHundrets = (int)factoredValue / 100;
                     if (numberHundrets > 0)
                     {
-                        valueString += CONSTANT.stringOnes[numberHundrets - 1] + "hundred";
-                        value -= 100 * numberHundrets * potency;
                         factoredValue -= 100 * numberHundrets;
-                        if (factoredValue > 0) { valueString += " "; }
+                        string convertedHundret = ConcatenateStrings(CONSTANT.stringOnes[numberHundrets - 1], "hundred", "");
+                        valueString = ConcatenateStrings(valueString, convertedHundret, " ");
                     }
-                   
-                    if (factoredValue >= 19)
-                    {
-                        int numberTens = (int)factoredValue / 10;
-                        if (numberTens > 0)
-                        {
-                            valueString += CONSTANT.stringTens[numberTens - 1];
-                            value -= 10 * numberTens * potency;
-                            factoredValue -= 10 * numberTens;
-                            if (factoredValue > 0)
-                            {
-                                valueString += "-";
-                            }
-                        }
-                    }
-
-                    int numberOnes = (int)factoredValue;
-                    if (numberOnes > 0)
-                    {
-                        valueString += CONSTANT.stringOnes[numberOnes - 1];
-                        value -= numberOnes * potency;
-                        factoredValue -= numberOnes;
-                    }
-
+                    string tens = ConvertTensInText(factoredValue);
                     
-                    if (value < 1) { 
-                        return valueString + " "; 
-                    }
-                    valueString += CONSTANT.stringPotencyList[i] + " ";
+                    valueString = ConcatenateStrings(valueString, tens, (tens =="")?"":" " );
+                   
+                    valueString = ConcatenateStrings(valueString, CONSTANT.stringPotencyList[i], " ");
+                    
                 }
                 i++;
             }
-            return valueString + " ";
+            valueString = ConcatenateStrings(valueString, "dollars", " ");
+            return valueString;
         }
 
-        public string decimalValue2Cent(decimal value) {
-            string valueString = "";
-            int numberTens = 0;
-            int numberOnes = 0;
+        public string convertCent2Text(decimal value) {
             int centValue = (int)(value%1 * 100);
 
-            if (centValue > 0)
+            if (centValue == 0)
             {
-                valueString += "and ";
-
-                if (centValue >= 19)
-                {
-                    numberTens = (int)centValue / 10;
-                    if (numberTens > 0)
-                    {
-                        valueString += CONSTANT.stringTens[numberTens - 1];
-                        centValue -= 10 * numberTens;
-                        if (centValue > 0)
-                        {
-                            valueString += "-";
-                        }
-                    }
-                }
-
-                numberOnes = (int)centValue;
-                if (numberOnes > 0)
-                {
-                    valueString += CONSTANT.stringOnes[numberOnes - 1];
-                    if (numberOnes == 1 && numberTens == 0)
-                    {
-                        return valueString +" cent";
-                    }
-                }
-                valueString += " cents";
+                return "";
             }
-            return valueString;
+
+            if (centValue == 1)
+            {
+                return "one cent";
+            }
+
+            return ConvertTensInText(value);
 
         }
-        public string decimalValue2Text(decimal value)
+
+        public string convertCurrent2Text(decimal value)
         {
-            string dollar = decimalValue2Dollar(value);
+            string dollar = convertDollar2Text(value);
 
-            string cent = decimalValue2Cent(value);
-            
-            return dollar + cent;
+            string cent = convertCent2Text(value);
 
+            return ConcatenateStrings(dollar, cent, (dollar == "" || cent == "") ? "" : " and ");
+
+        }
+
+        public string ConvertTensInText(decimal value)
+        {
+            int numberTens = 0;
+            string convertedTens = "";
+
+            if (value >= 19)
+            {
+                numberTens = (int)value / 10;
+                if (numberTens > 0)
+                {
+                    value -= 10 * numberTens;
+                    convertedTens = ConcatenateStrings(convertedTens, CONSTANT.stringTens[numberTens - 1], " ");
+                }
+            }
+
+            int numberOnes = (int)value;
+            if (numberOnes > 0)
+            {
+                convertedTens = ConcatenateStrings(convertedTens, CONSTANT.stringOnes[numberOnes - 1], (numberTens == 0) ? "" : "-");
+            }
+            return convertedTens;
         }
 
        
