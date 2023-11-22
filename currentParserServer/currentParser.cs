@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace currentParserServer
@@ -7,7 +6,7 @@ namespace currentParserServer
     class Constant
     {
         public NumberFormatInfo numberFormatInfo = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalSeparator = "," };
-        public string[] stringPotencyList = { "million", "thousand", "dollars" };
+        public string[] stringPotencyList = { "million", "thousand", "" };
         public string[] stringTens = ["ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eigty", "ninty"];
         public string[] stringOnes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "therteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eigthteen", "nineteen"];
         public int[] potencyList = [1_000_000, 1_000, 1];
@@ -57,7 +56,6 @@ namespace currentParserServer
             return false;
         }
         
-
         public decimal string2Decimal(String value)
         {
             return Convert.ToDecimal(value, CONSTANT.numberFormatInfo);
@@ -149,7 +147,7 @@ namespace currentParserServer
                 return "one cent";
             }
 
-            return ConvertTensInText(value);
+            return ConcatenateStrings(ConvertTensInText(centValue), "cents", " ");
 
         }
 
@@ -185,7 +183,5 @@ namespace currentParserServer
             }
             return convertedTens;
         }
-
-       
     }
 }
